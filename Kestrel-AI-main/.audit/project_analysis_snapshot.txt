@@ -1,0 +1,91 @@
+﻿PROJECT ANALYSIS SNAPSHOT
+
+TOTAL_FILES=130
+TOTAL_LINES=20843
+
+[FILES_BY_TOP_FOLDER]
+.gitignore: 1
+components.json: 1
+index.html: 1
+index.html.backup.20250721_193155: 1
+index.html.backup.20250721_202629: 1
+package.json: 1
+package-lock.json: 1
+postcss.config.js: 1
+public: 1
+README.md: 1
+src: 105
+supabase: 10
+tailwind.config.js: 1
+tempo.config.json: 1
+tsconfig.json: 1
+tsconfig.node.json: 1
+vite.config.ts: 1
+
+[FILES_BY_EXTENSION]
+.tsx = 96
+.sql = 10
+.ts = 9
+.json = 6
+.js = 2
+.html = 1
+.css = 1
+.gitignore = 1
+.svg = 1
+.20250721_202629 = 1
+.md = 1
+.20250721_193155 = 1
+
+[LARGEST_FILES_BY_LINES]
+ 6531  package-lock.json
+ 2289  src/lib/api.ts
+ 1288  README.md
+ 1037  src/components/sql-generator/VisualizationSection.tsx
+  535  src/components/sql-generator/ResultsDisplay.tsx
+  446  src/lib/market-index-service.ts
+  419  src/pages/SQLGenerator.tsx
+  283  src/types/supabase.ts
+  261  src/components/ui/carousel.tsx
+  239  src/lib/scraper.ts
+  239  src/components/ui/menubar.tsx
+  237  src/stories/navigation-menu.stories.tsx
+  227  src/components/settings/SettingsDialog.tsx
+  204  src/components/ui/dropdown-menu.tsx
+  203  src/components/ui/context-menu.tsx
+  193  src/components/ui/use-toast.ts
+  188  src/lib/sp500-service.ts
+  177  src/components/ui/form.tsx
+  163  src/components/ui/select.tsx
+  163  src/stories/calendar.stories.tsx
+
+[TOP_IMPORTED_MODULES_IN_SRC]
+  51  react
+  40  @/lib/utils
+  17  @radix-ui/react-icons
+  14  ../components/ui/button
+  12  @/components/ui/button
+  11  lucide-react
+   9  ../components/ui/label
+   8  class-variance-authority
+   5  ../components/ui/input
+   4  @supabase/supabase-js
+   3  react-day-picker
+   3  @radix-ui/react-dialog
+   3  @/components/ui/use-toast
+   2  date-fns
+   2  @/components/theme/theme-provider
+   2  ../components/ui/avatar
+   2  ../components/ui/switch
+   2  @radix-ui/react-label
+   2  react-router-dom
+   2  @/components/ui/card
+   2  @/components/ui/input
+   2  @/components/ui/label
+   2  ../components/ui/separator
+   2  @radix-ui/react-slot
+   1  @/components/sql-generator/QueryInput
+   1  tailwind-merge
+   1  @/components/ui/back-to-top
+   1  @radix-ui/react-toggle
+   1  @radix-ui/react-toast
+   1  @/components/settings/SettingsDialog
