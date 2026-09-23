@@ -601,26 +601,77 @@ export async function processNaturalLanguageQuery(
     console.log("[Query Flow] Upserting latest market data into Supabase cache...");
     await upsertToDatabase(fetchedResults);
 
-    // Step 5: Format presentation data according to query flow
+    // Step 5: Query and fetch the updated records directly from Supabase
+    console.log("[Query Flow] Querying updated records directly from Supabase database...");
+    const tickerList = fetchedResults.map((r) => r.ticker);
     let displayData: any[] = [];
+
     if (intent.queryType === "company_specific") {
-      // For single or specific companies: return daily price history for charting & inspection
-      if (fetchedResults.length === 1) {
-        displayData = fetchedResults[0].history.slice(-90);
-      } else {
-        // Multiple specific companies: combine historical rows
-        displayData = fetchedResults.flatMap((r) => r.history.slice(-60));
+      try {
+        const { data: dbRows, error: dbError } = await supabase
+          .from("company_data_cache")
+          .select("symbol, data")
+          .in("symbol", tickerList);
+
+        if (!dbError && dbRows && dbRows.length > 0) {
+          console.log(`[Query Flow] Successfully fetched ${dbRows.length} company record(s) from Supabase company_data_cache`);
+          if (dbRows.length === 1) {
+            displayData = Array.isArray(dbRows[0].data) ? dbRows[0].data : [];
+          } else {
+            displayData = dbRows.flatMap((r) => (Array.isArray(r.data) ? r.data : []));
+          }
+        }
+      } catch (err) {
+        console.warn("[Query Flow] Supabase fetch error, using fallback:", err);
+      }
+
+      // Safe fallback if Supabase read was empty or unavailable
+      if (displayData.length === 0) {
+        displayData =
+          fetchedResults.length === 1
+            ? fetchedResults[0].history.slice(-90)
+            : fetchedResults.flatMap((r) => r.history.slice(-60));
       }
     } else {
-      // For broad market query: return ranked comparison table (one row per company)
-      displayData = fetchedResults.map((r) => r.summary);
-      // Sort by currentPrice or changePercent
-      displayData.sort((a, b) => b.currentPrice - a.currentPrice);
+      // Broad market: query market_summary table from Supabase
+      try {
+        const { data: summaryRows, error: summaryErr } = await supabase
+          .from("market_summary")
+          .select("*")
+          .in("symbol", tickerList)
+          .order("current_price", { ascending: false });
+
+        if (!summaryErr && summaryRows && summaryRows.length > 0) {
+          console.log(`[Query Flow] Successfully fetched ${summaryRows.length} summary rows from Supabase market_summary`);
+          displayData = summaryRows.map((row) => ({
+            symbol: row.symbol,
+            yahooSymbol: row.yahoo_symbol || row.symbol,
+            name: row.name,
+            currentPrice: Number(row.current_price) || 0,
+            previousClose: row.previous_close ? Number(row.previous_close) : null,
+            changePercent: Number(row.change_percent) || 0,
+            fiftyTwoWeekHigh: row.fifty_two_week_high ? Number(row.fifty_two_week_high) : null,
+            fiftyTwoWeekLow: row.fifty_two_week_low ? Number(row.fifty_two_week_low) : null,
+            volume: Number(row.volume) || 0,
+            currency: row.currency || "USD",
+            exchange: row.exchange || "",
+            source: "Supabase Database",
+          }));
+        }
+      } catch (err) {
+        console.warn("[Query Flow] Supabase market_summary query error:", err);
+      }
+
+      // Safe fallback if market_summary table is not yet created in Supabase
+      if (displayData.length === 0) {
+        displayData = fetchedResults.map((r) => r.summary);
+        displayData.sort((a, b) => b.currentPrice - a.currentPrice);
+      }
     }
+
 
     // Step 6: Generate SQL query using updated database data
     console.log("[Query Flow] Generating SQL query with DeepSeek...");
-    const tickerList = fetchedResults.map((r) => r.ticker);
     const sqlQuery = await generateSQLFromNaturalLanguage(
       prompt,
       apiKeys.deepseek,
@@ -628,6 +679,7 @@ export async function processNaturalLanguageQuery(
       tickerList,
       displayData,
     );
+
 
     // Step 7: Generate DeepSeek explanation of the results
     console.log("[Query Flow] Generating results explanation...");
