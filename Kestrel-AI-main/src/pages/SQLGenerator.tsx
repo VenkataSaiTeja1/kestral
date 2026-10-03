@@ -302,11 +302,16 @@ export default function SQLGenerator() {
         <div className="flex-1 space-y-6 pb-80 overflow-auto">
           {/* Added more padding at the bottom for scrolling */}
           <div className="flex justify-between items-center sticky top-0 z-10 bg-background/95 backdrop-blur-sm py-4 border-b">
-            <h1 className="text-3xl font-bold">
-              Natural Language <span className="text-[#26A69A]">SQL</span>{" "}
-              Generator
-            </h1>
+            <div>
+              <h1 className="text-3xl font-bold flex items-center gap-2">
+                <span className="text-[#26A69A]">Kestrel</span> AI
+              </h1>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                Financial Market Research & Natural Language SQL Generator
+              </p>
+            </div>
             <div className="flex items-center gap-4">
+
               <Button
                 variant="outline"
                 size="icon"

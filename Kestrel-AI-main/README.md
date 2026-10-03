@@ -1,4 +1,5 @@
-# Natural Language SQL Generator for Financial Market Research: A Comprehensive Analysis
+# Kestrel AI: Natural Language Financial Market Research & SQL Generator
+
 
 ## Abstract
 

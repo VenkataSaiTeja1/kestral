@@ -6,10 +6,11 @@ export function Header() {
       <div className="container flex h-14 items-center">
         <div className="mr-4 flex">
           <a href="/" className="mr-6 flex items-center space-x-2">
-            <span className="font-bold text-xl text-[#26A69A]">
-              SQL Generator
+            <span className="font-extrabold text-xl tracking-tight text-[#26A69A]">
+              Kestrel <span className="text-foreground">AI</span>
             </span>
           </a>
+
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
           <nav className="flex items-center">
